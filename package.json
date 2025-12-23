@@ -1,0 +1,93 @@
+{
+  "name": "hsk-teacher",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.js",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "build": {
+    "appId": "com.hsk.teacher",
+    "productName": "口误拜拜 (OOPS AWAY)",
+    "icon": "build/icon.png",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "mac": {
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "需要使用麦克风进行口语录音与识别。"
+      }
+    },
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "server/dist",
+        "to": "server",
+        "filter": [
+          "python_asr_server*"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "dev": "vite",
+    "electron:dev": "wait-on http://localhost:5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .",
+    "app:dev": "run-p dev electron:dev",
+    "asr-server": "node server/asr-server.js",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "build:python": "python -m PyInstaller --noconfirm --onefile --name python_asr_server --distpath server/dist server/python_asr_server.py",
+    "build:app": "npm run build && npm run build:python && electron-builder",
+    "preview": "vite preview",
+    "test:unit": "vitest",
+    "test:e2e": "playwright test",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build",
+    "lint": "eslint . --fix --cache",
+    "format": "prettier --write --experimental-cli src/"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dashscope": "^1.0.1",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "pinia": "^3.0.4",
+    "pinyin-pro": "^3.19.0",
+    "vue": "^3.5.25",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@tsconfig/node24": "^24.0.3",
+    "@types/jsdom": "^27.0.0",
+    "@types/node": "^24.10.1",
+    "@vitejs/plugin-vue": "^6.0.2",
+    "@vitejs/plugin-vue-jsx": "^5.1.2",
+    "@vitest/eslint-plugin": "^1.5.0",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.6.0",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.8.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-playwright": "^2.3.0",
+    "eslint-plugin-vue": "~10.5.1",
+    "cross-env": "^7.0.3",
+    "concurrently": "^9.2.1",
+    "electron": "^35.1.5",
+    "electron-builder": "^25.1.8",
+    "jiti": "^2.6.1",
+    "jsdom": "^27.2.0",
+    "npm-run-all2": "^8.0.4",
+    "prettier": "3.6.2",
+    "typescript": "~5.9.0",
+    "vite": "^7.3.0",
+    "vite-plugin-vue-devtools": "^8.0.5",
+    "vitest": "^4.0.14",
+    "vue-tsc": "^3.1.5",
+    "wait-on": "^8.0.2"
+  }
+}

@@ -1,0 +1,5 @@
+dashscope
+flask
+flask-cors
+openai
+python-dotenv
